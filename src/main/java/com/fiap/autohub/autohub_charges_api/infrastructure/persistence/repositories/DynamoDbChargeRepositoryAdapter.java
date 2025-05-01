@@ -47,7 +47,7 @@ public class DynamoDbChargeRepositoryAdapter implements ChargeRepositoryPort {
         try {
             ChargeDynamoDbEntity entity = mapper.toDynamoDbEntity(charge);
             chargeTable.putItem(entity);
-            log.info("Charge {} saved successfully to DynamoDB. {}", entity.getChargeId(), entity);
+            log.info("Charge {} saved successfully to DynamoDB. vehicleId: {}", entity.getChargeId(), entity.getVehicleId());
             return mapper.toDomainEntity(entity);
         } catch (DynamoDbException e) {
             log.error("DynamoDB error saving chargeId {}: {}", charge.getChargeId(), e.getMessage(), e);

@@ -53,7 +53,7 @@ public class ChargeDynamoDbEntity {
 
     @DynamoDbAttribute("vehicle_id")
     public UUID getVehicleId() {
-        return saleId;
+        return vehicleId;
     }
 
     public void setVehicleId(UUID vehicleId) {

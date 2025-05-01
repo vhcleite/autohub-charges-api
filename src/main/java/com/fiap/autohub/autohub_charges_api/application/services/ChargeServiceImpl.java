@@ -78,8 +78,9 @@ public class ChargeServiceImpl implements ChargeServicePort {
 
         Charge savedCharge;
         try {
+            log.info("Saving charge with chargeId: {} vehicleId: {}", charge.getChargeId(), charge.getVehicleId());
             savedCharge = chargeRepository.save(charge);
-            log.info("Charge created and saved with chargeId: {} {}", savedCharge.getChargeId(), savedCharge);
+            log.info("Charge created and saved with chargeId: {} vehicleId: {}", savedCharge.getChargeId(), savedCharge.getVehicleId());
         } catch (Exception e) {
             log.error("Failed to save charge {} for saleId {} to repository after successful gateway creation.", charge.getChargeId(), saleId, e);
             log.warn("Attempting compensation 1: Cancelling charge {} in gateway.", charge.getChargeId());

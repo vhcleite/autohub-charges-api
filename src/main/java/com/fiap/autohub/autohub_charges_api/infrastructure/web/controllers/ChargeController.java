@@ -122,4 +122,10 @@ public class ChargeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/charges/ping")
+    public String ping() {
+        log.info("Ping endpoint invoked!");
+        return "pong-0";
+    }
 }
