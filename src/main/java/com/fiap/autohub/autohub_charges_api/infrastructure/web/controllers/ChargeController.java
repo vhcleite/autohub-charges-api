@@ -126,6 +126,6 @@ public class ChargeController {
     @GetMapping("/ping")
     public String ping() {
         log.info("Ping endpoint invoked!");
-        return "pong-0";
+        return "pong-1";
     }
 }
