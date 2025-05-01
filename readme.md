@@ -19,7 +19,6 @@ tratamento de timeouts) e pela interação com o gateway de pagamento (atualment
 * [API Endpoints (HTTP)](#api-endpoints-http)
 * [Eventos Consumidos (SQS)](#eventos-consumidos-sqs)
 * [Eventos Publicados (SNS)](#eventos-publicados-sns)
-* [Fluxos de Sequência (Diagramas)](#fluxos-de-sequência-diagramas)
 * [Modelo de Dados](#modelo-de-dados)
 * [Deployment (AWS Lambda)](#deployment-aws-lambda)
 * [Contribuição](#contribuição)
@@ -164,36 +163,6 @@ Esta API publica os seguintes eventos no tópico SNS `AutoHubBusinessEventsTopic
 | `PaymentCompleted`     | Callback de pagamento bem-sucedido recebido.        | Notifica sucesso, dispara finalização da venda. |
 | `PaymentFailed`        | Callback de pagamento falhado recebido.             | Notifica falha, dispara compensações.           |
 | `ChargeExpired`        | Processamento da mensagem de timeout.               | Notifica expiração, dispara compensações.       |
-
-## Fluxos de Sequência (Diagramas)
-
-*(Incorporar ou linkar os diagramas Mermaid aqui)*
-
-```mermaid
-sequenceDiagram
-    participant SQS_VR as ChargesApi_VehicleReserved_Queue
-    participant Lambda_SQS as ChargesApiSqs-dev (Consumer)
-    participant Service as ChargeServiceImpl
-    participant Gateway as MockPaymentGatewayAdapter
-    participant Repo as DynamoDbChargeRepositoryAdapter
-    participant SNS as AutoHubBusinessEventsTopic
-    participant SQS_Timeout as AutoHubChargeTimeoutQueue
-
-    SQS_VR ->> Lambda_SQS: Entrega VehicleReservedEvent
-    Lambda_SQS ->> Service: processVehicleReservation(event)
-    Service ->> Gateway: createCharge(saleId, amount)
-    Gateway -->> Service: Retorna Optional[PaymentGatewayResponse] (com chargeId, paymentCode, expiresAt)
-    Service ->> Repo: save(charge com status PENDING)
-    Repo -->> Service: Retorna Charge salvo
-    Service ->> SNS: publishChargeCreated(ChargeCreatedEvent)
-    Service ->> SQS_Timeout: scheduleTimeoutCheck(charge) / sendMessage com Delay
-    SQS_Timeout -->> Service: (Mensagem fica na fila com delay)
-    SNS -->> Service: (Evento publicado)
-    Service -->> Lambda_SQS: Retorna (processamento concluído)
-    Lambda_SQS ->> SQS_VR: ACK/Delete Mensagem
-```
-
-*(Adicione os outros diagramas)*
 
 ## Modelo de Dados
 
