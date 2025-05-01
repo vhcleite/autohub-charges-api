@@ -3,6 +3,10 @@
 API responsável pelo gerenciamento do ciclo de vida das cobranças (criação, atualização de status via callback,
 tratamento de timeouts) e pela interação com o gateway de pagamento (atualmente simulado) na plataforma AutoHub.
 
+## Integrantes:
+
+- Victor Hugo da Costa Leite RM354905
+
 ## Índice
 
 * [Visão Geral](#visão-geral)
