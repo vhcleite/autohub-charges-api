@@ -52,13 +52,13 @@ public class ChargeServiceImpl implements ChargeServicePort {
 
     @Override
     public void processVehicleReservation(VehicleReservedEvent event) {
-        if (event == null || event.data() == null || event.getSaleId() == null || event.getPrice() == null) {
+        if (event == null || event.data() == null || event.getSaleId() == null || event.getPrice() == null || event.getVehicleId() == null) {
             log.error("Received invalid VehicleReservedEvent: {}", event);
             return;
         }
 
         UUID saleId = event.getSaleId();
-        log.info("Processing VehicleReservedEvent for saleId: {}", saleId);
+        log.info("Processing VehicleReservedEvent for saleId: {} and vehicle_id: {}", saleId, event.getVehicleId());
 
         PaymentGatewayPort.PaymentGatewayResponse gatewayResponse;
         try {
@@ -79,7 +79,7 @@ public class ChargeServiceImpl implements ChargeServicePort {
         Charge savedCharge;
         try {
             savedCharge = chargeRepository.save(charge);
-            log.info("Charge created and saved with chargeId: {}", savedCharge.getChargeId());
+            log.info("Charge created and saved with chargeId: {} {}", savedCharge.getChargeId(), savedCharge);
         } catch (Exception e) {
             log.error("Failed to save charge {} for saleId {} to repository after successful gateway creation.", charge.getChargeId(), saleId, e);
             log.warn("Attempting compensation 1: Cancelling charge {} in gateway.", charge.getChargeId());
@@ -197,7 +197,7 @@ public class ChargeServiceImpl implements ChargeServicePort {
                 charge.setGatewayDetails(details);
                 try {
                     savedCharge = chargeRepository.save(charge);
-                    log.info("Charge {} status updated to PAID.", chargeId);
+                    log.info("Charge {} status updated to PAID. {}", chargeId, savedCharge);
                 } catch (Exception e) {
                     log.error("Failed to save PAID status for charge {} to repository.", chargeId, e);
                     throw new RuntimeException("Failed to update charge status after successful payment confirmation", e);
