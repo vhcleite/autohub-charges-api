@@ -1,0 +1,28 @@
+# --- src/main/resources/application-sqs.yml ---
+spring:
+  main:
+    web-application-type: none
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+      - org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration
+      - org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+      - org.springdoc.core.configuration.SpringDocConfiguration
+      - org.springdoc.core.configuration.SpringDocWebMvcConfiguration
+      - org.springdoc.webmvc.ui.SwaggerConfig
+      - org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+
+  # Configuração Spring Cloud Function para SQS
+  cloud:
+    function:
+      definition: chargeEventsConsumer
+    aws:
+      sqs:
+        enabled: true
+      sns:
+        enabled: true

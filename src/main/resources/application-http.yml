@@ -1,0 +1,13 @@
+# --- src/main/resources/application-http.yml ---
+spring:
+  cloud:
+    aws:
+      sqs:
+        enabled: false
+  autoconfigure:
+    exclude:
+      # Exclui auto-configurações de SQS e Function que não são necessárias para HTTP
+      - io.awspring.cloud.autoconfigure.sqs.SqsAutoConfiguration
+      - io.awspring.cloud.autoconfigure.sqs.SqsListenerAutoConfiguration
+      - org.springframework.cloud.function.serverless.web.ServerlessAutoConfiguration
+      - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration

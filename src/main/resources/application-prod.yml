@@ -1,0 +1,26 @@
+# --- src/main/resources/application-prod.yml ---
+spring:
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION}
+
+logging:
+  level:
+    com.fiap.autohub: INFO
+    org.springframework: WARN
+    software.amazon.awssdk: WARN
+
+aws:
+  region: ${AWS_REGION}
+  dynamodb:
+    table-name:
+      charges: ${DYNAMODB_TABLE_CHARGES}
+
+sqs:
+  queue:
+    charge-timeout-url: ${SQS_QUEUE_CHARGE_TIMEOUT_URL}
+
+sns:
+  topic:
+    main-event-bus-arn: ${SNS_TOPIC_MAIN_EVENT_BUS_ARN}

@@ -1,0 +1,39 @@
+# --- src/main/resources/application-local.yml ---
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_LOCAL_ACCESS_KEY:test}
+        secret-key: ${AWS_LOCAL_SECRET_KEY:test}
+      region:
+        static: ${aws.region:us-east-1}
+      dynamodb:
+        endpoint: ${aws.dynamodb.endpoint:http://localhost:4566}
+
+aws:
+  region: us-east-1
+  localstack:
+    endpoint: http://localhost:4566
+  dynamodb:
+    endpoint: http://localhost:4566
+    table-name:
+      charges: AutoHubCharges-local
+  credentials:
+    accessKey: test
+    secretKey: test
+
+sqs:
+  queue:
+    charges-vehicle-reserved: ChargesApi_VehicleReserved_Queue-local
+    charge-timeout-url: http://localhost:4566/000000000000/AutoHubChargeTimeoutQueue-local
+
+sns:
+  topic:
+    main-event-bus-arn: arn:aws:sns:us-east-1:000000000000:AutoHubBusinessEventsTopic-local
+
+logging:
+  level:
+    com.fiap.autohub: DEBUG
+    org.springframework: INFO
+    software.amazon.awssdk: DEBUG # Ver logs do SDK AWS
+    io.awspring.cloud: DEBUG

@@ -1,0 +1,34 @@
+# src/test/resources/application-test.yml
+spring:
+  autoconfigure:
+    exclude:
+      - io.awspring.cloud.autoconfigure.config.secretsmanager.SecretsManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test.issuer
+
+aws:
+  region: us-east-1
+  dynamodb:
+    table-name:
+      charges: ${DYNAMODB_TABLE_CHARGES:test-charges-table} # <<< PROPRIEDADE ADICIONADA
+  localstack:
+    endpoint: ${AWS_LOCALSTACK_ENDPOINT:http://localhost:4566}
+  credentials:
+    accessKey: ${AWS_LOCAL_ACCESS_KEY:test}
+    secretKey: ${AWS_LOCAL_SECRET_KEY:test}
+
+sqs:
+  queue:
+    charge-timeout-url: ${SQS_QUEUE_CHARGE_TIMEOUT_URL:http://localhost:4566/000000000000/TestChargeTimeoutQueue}
+
+sns:
+  topic:
+    main-event-bus-arn: ${SNS_TOPIC_MAIN_EVENT_BUS_ARN:arn:aws:sns:us-east-1:000000000000:TestEventBus}
+

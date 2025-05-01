@@ -1,0 +1,49 @@
+# --- src/main/resources/application.yml (Base) ---
+spring:
+  application:
+    name: autohub-charges-api
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local,http}
+  # Configuração Jackson padrão (consistente com as outras APIs)
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
+    deserialization:
+      fail-on-unknown-properties: false
+    serialization:
+      write-dates-as-timestamps: false # Escrever como string ISO-8601
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_8UvCaSvhB
+
+# Configuração Springdoc comum (aplicável apenas se o perfil 'http' estiver ativo)
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  default-property-naming-strategy: snake_case
+
+sqs:
+  queue:
+    charges-vehicle-reserved: ${SQS_QUEUE_CHARGES_VEHICLE_RESERVED_NAME:ChargesApi_VehicleReserved_Queue-local}
+    charge-timeout-url: ${SQS_QUEUE_CHARGE_TIMEOUT_URL:http://localhost:4566/000000000000/AutoHubChargeTimeoutQueue-local}
+
+sns:
+  topic:
+    main-event-bus-arn: ${SNS_TOPIC_MAIN_EVENT_BUS_ARN:arn:aws:sns:us-east-1:000000000000:AutoHubBusinessEventsTopic-local}
+
+# Propriedades AWS comuns ou defaults
+aws:
+  region: ${AWS_REGION:us-east-1}
+  dynamodb:
+    table-name:
+      charges: ${DYNAMODB_TABLE_CHARGES:AutoHubCharges-local}
+      endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost:4566}
+  localstack:
+    endpoint: ${AWS_LOCALSTACK_ENDPOINT:http://localhost:4566}
+  credentials:
+    accessKey: ${AWS_LOCAL_ACCESS_KEY:test}
+    secretKey: ${AWS_LOCAL_SECRET_KEY:test}

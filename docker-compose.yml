@@ -1,0 +1,31 @@
+# docker-compose.yml for autohub-charges-api local development
+
+version: '3.8'
+
+services:
+  # LocalStack para simular serviços AWS (SNS, SQS, DynamoDB)
+  localstack:
+    image: localstack/localstack:3.6.0
+    container_name: localstack-autohub-charges
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs,dynamodb
+      - DEBUG=0
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEFAULT_REGION=us-east-1
+      # Variáveis para o script de inicialização (opcional, pode definir no script)
+    volumes:
+      - localstack_charges_data:/var/lib/localstack # Volume para dados do LocalStack
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./localstack/init:/etc/localstack/init/ready.d
+    networks:
+      - autohub-charges-local-net
+
+volumes:
+  localstack_charges_data:
+
+networks:
+  autohub-charges-local-net:
+    driver: bridge
+
